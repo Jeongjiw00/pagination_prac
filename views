@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
+    <title>Document</title>
+    <style>
+      li {
+        display: inline-block;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>영화 목록 보기</h1>
+    <a href="register.html"> 영화 등록하러 가기 </a> <br />
+    <table id="table" class="table" border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>제목</th>
+          <th>등록자</th>
+          <th>조회수</th>
+          <th>등록일</th>
+        </tr>
+      </thead>
+      <tbody id="movies"></tbody>
+    </table>
+    <ul id="pagination"></ul>
+  </body>
+  <script></script>
+</html>
