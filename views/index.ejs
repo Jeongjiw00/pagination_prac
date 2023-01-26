@@ -1,0 +1,92 @@
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css" />
+    <title>Document</title>
+    <style>
+      li {
+        display: inline-block;
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>영화 목록 보기</h1>
+    <a href="register.html"> 영화 등록하러 가기 </a> <br />
+    <table id="table" class="table" border="1">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>제목</th>
+          <th>등록자</th>
+          <th>조회수</th>
+          <th>등록일</th>
+        </tr>
+      </thead>
+      <tbody id="movies"></tbody>
+    </table>
+    <ul id="pagination"></ul>
+  </body>
+  <script>
+    const urlSearch = new URLSearchParams(location.search);
+    const page = urlSearch.get("page") || 1;
+    if (page === null) {
+      page = 1;
+    }
+    if (page <= 0) {
+      alert("첫 페이지입니다");
+      window.location.href = "/";
+    }
+    if (page)
+      fetch(`http://localhost:5000/movies?page=${page}`)
+        .then((response) => response.json())
+        .then((movies) => {
+          // console.log(movies);
+          // 마지막 페이지를 넘었을 때
+          if (movies.error) {
+            alert(movies.error);
+            window.location.href = `/?page=${page - 1}`;
+          }
+          const html = movies.movies.map((movie) => {
+            return `<tr>
+        <td>${movie.id}</td>
+        <td><a href="movie.html?id=${movie.id}">${movie.movie_title}</td>
+        <td>${movie.name}</td>
+        <td>${movie.hit_count}</td>
+        <td>${movie.created_at}</td>
+      </tr>`;
+          });
+          document.getElementById("movies").innerHTML = html.join("");
+
+          //페이지네이션
+          const firstPage = movies.pageInfo.firstPage;
+          const lastPage = movies.pageInfo.lastPage;
+          const totalPage = movies.pageInfo.totalPage;
+          const pages = [];
+
+          // first button
+          let first = `<li><a href='?page=1'><<</a></li>`;
+          pages.push(first);
+
+          // prev button
+          let prev = `<li><a href='?page=${Number(page) - 1}'><</a></li>`;
+          pages.push(prev);
+
+          for (let i = firstPage; i <= lastPage; i++) {
+            pages.push(`<li><a href="?page=${i}">${i}</a></li>`);
+          }
+
+          // next button
+          let next = `<li><a href='?page=${Number(page) + 1}'>></a></li>`;
+          pages.push(next);
+
+          // last button
+          let last = `<li><a href='?page=${totalPage}'>>></a></li>`;
+          pages.push(last);
+
+          document.getElementById("pagination").innerHTML = pages.join("");
+        });
+  </script>
+</html>
